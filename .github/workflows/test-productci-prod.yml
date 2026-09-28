@@ -1,0 +1,55 @@
+name: Product API Production CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start Product API
+        run: npm start &
+        env:
+          PORT: 3000
+          MONGO_URI: mongodb://localhost:27017/productdb
+
+      - name: Wait for API
+        run: |
+          sleep 5
+          curl --fail http://localhost:3000/health
+
+      - name: Test GET products
+        run: |
+          curl --fail http://localhost:3000/products
+
+      - name: Test POST product
+        run: |
+          curl --fail -X POST http://localhost:3000/products \
+          -H "Content-Type: application/json" \
+          -d '{"pid":999,"pname":"CI Product","price":100000,"quantity":10}'
