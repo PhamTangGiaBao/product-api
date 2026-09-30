@@ -1,0 +1,28 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: nammongodb-prod
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_prod_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  product-api:
+    image: baopham2608/product-api:latest
+    container_name: product-api-prod
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      MONGO_URI: mongodb://mongodb:27017/productdb
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+volumes:
+  mongodb_prod_data:
