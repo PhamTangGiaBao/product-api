@@ -1,0 +1,15 @@
+name: Test Self Hosted Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Check Runner
+        run: |
+          echo "Runner is working"
+          hostname
+          docker ps
