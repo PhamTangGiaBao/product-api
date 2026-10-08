@@ -12,7 +12,7 @@ const req = http.request(options, (res) => {
         console.log("Health check test: PASSED");
         process.exit(0);
     } else {
-        console.error("Health check test: FAILED");
+        console.error("CI/CD Health check test: FAILED");
         process.exit(1);
     }
 });
