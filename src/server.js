@@ -14,7 +14,7 @@ app.use("/products", productRoutes);
 
 app.get("/health", (req, res) => {
     res.status(200).json({
-        status: "OK"
+        status: "Product API is running"
     });
 });
 

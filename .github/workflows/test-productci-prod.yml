@@ -52,4 +52,4 @@ jobs:
         run: |
           curl --fail -X POST http://localhost:3000/products \
           -H "Content-Type: application/json" \
-          -d '{"pid":999,"pname":"CI Product","price":100000,"quantity":10}'
+          -d '{"pid":999,"pname":"CI Products","price":100000,"quantity":10}'
